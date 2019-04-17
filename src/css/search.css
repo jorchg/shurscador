@@ -1,0 +1,16 @@
+.search-wrapper {
+  width: 100%;
+}
+
+.ais-SearchBox {
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 8px;
+  border: 0;
+}
+
+input.ais-SearchBox-input {
+  background-color: rgba(93,100,148,.1);
+  border: 0;
+  outline: 0;
+}
