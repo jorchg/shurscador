@@ -4,7 +4,8 @@
   "description": "Un buscador moderno para Forocoches",
   "scripts": {
     "build": "node utils/build.js",
-    "start": "node utils/webserver.js"
+    "start:dev": "node utils/webserver.js",
+    "start:prod": "NODE_ENV=production node utils/webserver.js"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^1.0.0",

@@ -14,3 +14,7 @@ input.ais-SearchBox-input {
   border: 0;
   outline: 0;
 }
+
+li.ais-Hits-item, .ais-InfiniteHits-item, .ais-InfiniteResults-item, .ais-Results-item {
+  width: 100%;
+}

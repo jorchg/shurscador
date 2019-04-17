@@ -3,6 +3,7 @@ import instantsearch from 'instantsearch.js';
 import { searchBox, hits } from 'instantsearch.js/es/widgets';
 
 import Dom from './helpers/dom';
+import mapper from './helpers/forum-mapper';
 import * as config from '../config/index';
 
 import "../css/search.css";
@@ -58,6 +59,7 @@ import "../css/search.css";
         return {
           ...pinnedThread,
           type: 'pinnedThread',
+          forumName: mapper.getForumName(parseInt(pinnedThread.forumId, 10)),
           lastSeen: new Date(),
         }
       });
@@ -75,6 +77,7 @@ import "../css/search.css";
         return {
           ...thread,
           type: 'thread',
+          forumName: mapper.getForumName(parseInt(thread.forumId, 10)),
           lastSeen: new Date(),
         }
       });
@@ -126,7 +129,14 @@ import "../css/search.css";
           container: '#hits',
           templates: {
             item: (item) => {
-              return `✌🏻 ${item.title}`;
+              return `
+                <div>
+                  ✉️
+                  <a href="https://www.forocoches.com/foro/forumdisplay.php?f=${item.forumId}" target="_blank">${item.forumName}</a>
+                  >
+                  <a href="${item.link}" target="_blank">${item.title}</a>
+                </div>
+              `;
             },
           },
           escapeHTML: true,
