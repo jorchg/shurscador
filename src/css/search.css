@@ -1,5 +1,20 @@
+.page-wrapper {
+  padding-top: 30px;
+}
+
 .search-wrapper {
   width: 100%;
+  position: absolute;
+  background-color: white;
+}
+
+#hits {
+  position: relative;
+  background-color: white;
+}
+
+#pagination {
+  position: relative;
 }
 
 .ais-SearchBox {
@@ -13,8 +28,30 @@ input.ais-SearchBox-input {
   background-color: rgba(93,100,148,.1);
   border: 0;
   outline: 0;
+  border-radius: 0px;
 }
 
-li.ais-Hits-item, .ais-InfiniteHits-item, .ais-InfiniteResults-item, .ais-Results-item {
+ol.ais-Hits-list {
+  margin-top: 0;
+  margin-left: 0;
+}
+
+li.ais-Hits-item {
   width: 100%;
+  margin-top: 0px;
+  margin-left: 16px;
+  margin-right: 16px;
+  padding: 0;
+  box-shadow: none;
+  border: 0;
+  border-top: 1px solid rgba(93,100,148,.1);
+  border-radius: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+li.ais-Hits-item:hover {
+  background-color: rgba(93,100,148,.1);
 }
