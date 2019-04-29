@@ -2,6 +2,7 @@
   "name": "Shurscador",
   "version": "0.0.1",
   "description": "Un buscador moderno para Forocoches",
+  "engines": { "node": "8" },
   "scripts": {
     "build": "node utils/build.js",
     "start:dev": "node utils/webserver.js",

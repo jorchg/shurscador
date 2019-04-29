@@ -20,6 +20,7 @@ import "../css/search.css";
         if (!this.currentURL.includes('forumdisplay')) return;
 
         const forumId = this.currentURL.split('forumdisplay.php')[1].split('=')[1];
+        if (parseInt(forumId, 10) !== 2) return;
         this.dom = new Dom(document, forumId);
         this.startCrawling();
       });
@@ -147,6 +148,7 @@ import "../css/search.css";
                   <a href="https://www.forocoches.com/foro/forumdisplay.php?f={{forumId}}" target="_blank">{{forumName}}</a>
                   >
                   <a href="{{link}}" target="_blank">{{#helpers.highlight}}{ "attribute": "title" }{{/helpers.highlight}} </a>
+                  | <a href="https://www.forocoches.com/foro/member.php?u={{createdById}}" target="_blank">@{{#helpers.highlight}}{ "attribute": "createdBy" }{{/helpers.highlight}}</a>
                 </div>
               `
           },

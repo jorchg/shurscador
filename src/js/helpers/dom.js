@@ -34,13 +34,17 @@ export default class Dom {
 
     const threadId = _anchor.href.split('showthread.php')[1].split('=')[1];
     const title = _anchor.innerText;
-    let createdBy = '';
+    let createdBy = '', createdById;
     const authorStarsRow = thread.querySelector(`#td_threadtitle_${threadId}`)
       .children[1]
       .querySelectorAll('span');
     
     for (let column of authorStarsRow) {
       if (column.innerText) createdBy = column.innerText;
+      const onclick = column.getAttribute('onclick');
+      if (onclick) {
+        createdById = onclick.split('?u=')[1].split('\',')[0];
+      }
     }
 
     return {
@@ -49,6 +53,7 @@ export default class Dom {
       title,
       link: _anchor.href,
       createdBy,
+      createdById,
     }
   }
 
@@ -67,13 +72,19 @@ export default class Dom {
     }
     const threadId = _anchor.href.split('showthread.php')[1].split('=')[1];
     const title = _anchor.innerText;
-    let createdBy = '';
+    let createdBy = '', createdById = 0;
     const authorStarsRow = thread.querySelector(`#td_threadtitle_${threadId}`)
       .children[1]
       .querySelectorAll('span');
-    
+
     for (let column of authorStarsRow) {
-      if (column.innerText) createdBy = column.innerText;
+      if (column.innerText) {
+        createdBy = column.innerText;
+        const onclick = column.getAttribute('onclick');
+        if (onclick) {
+          createdById = onclick.split('?u=')[1].split('\',')[0];
+        }
+      }
     }
 
     return {
@@ -82,6 +93,7 @@ export default class Dom {
       title,
       link: _anchor.href,
       createdBy,
+      createdById,
     }
   }
 };
