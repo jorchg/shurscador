@@ -2,11 +2,12 @@ import algoliasearch from 'algoliasearch';
 import instantsearch from 'instantsearch.js';
 import { searchBox, hits, configure, pagination } from 'instantsearch.js/es/widgets';
 
-import Dom from './helpers/dom';
+import ForumDom from './helpers/forum-dom';
 import mapper from './helpers/forum-mapper';
 import * as config from '../config/index';
 
 import "../css/search.css";
+import ThreadDom from './helpers/thread-dom';
 
 (function() {
   class Content {
@@ -17,12 +18,11 @@ import "../css/search.css";
     async create() {
       chrome.storage.local.get(['currentTab'], (result) => {
         this.currentURL = JSON.parse(result.currentTab).url;
-        if (!this.currentURL.includes('forumdisplay')) return;
-
-        const forumId = this.currentURL.split('forumdisplay.php')[1].split('=')[1];
-        if (parseInt(forumId, 10) !== 2) return;
-        this.dom = new Dom(document, forumId);
-        this.startCrawling();
+        if (this.currentURL.includes('forumdisplay')) {
+          this.forumCrawl();
+        } else if (this.currentURL.includes('showthread')) {
+          this.threadCrawl();
+        }
       });
       this.searchClient = algoliasearch(config.algolia.appId, config.algolia.readKey);
       const indexName = 'shurscador';
@@ -34,20 +34,45 @@ import "../css/search.css";
       this.initInstantSearch();
     }
 
-    startCrawling() {
+    threadCrawl() {
+      const threadId = this.currentURL.split('showthread.php')[1].split('=')[1];
+      this.threadDom = new ThreadDom(document, threadId);
+      this.startThreadCrawling();
+    }
+
+    startThreadCrawling() {
+      let posts = this.threadDom.postListTable.querySelectorAll('div[align=center]');
+      let postsInfo = [];
+      for (let post of posts) {
+        const info = this.threadDom.getPostInfo(post);
+        if (info && info.postContent.length > 0) postsInfo.push(info);
+      }
+
+      // Got posts. Now index them
+      console.log(postsInfo)
+    }
+    
+    forumCrawl() {
+      const forumId = this.currentURL.split('forumdisplay.php')[1].split('=')[1];
+      if (parseInt(forumId, 10) !== 2) return;
+      this.forumDom = new ForumDom(document, forumId);
+      this.startForumCrawling();
+    }
+
+    startForumCrawling() {
       let pinnedThreads = [];
-      for (let pinnedThread of this.dom.pinnedThreads.children) {
+      for (let pinnedThread of this.forumDom.pinnedThreads.children) {
         if (pinnedThread.querySelector('a')) {
-          const pinnedThreadInfo = this.dom.getPinnedThreadInfo(pinnedThread);
+          const pinnedThreadInfo = this.forumDom.getPinnedThreadInfo(pinnedThread);
           pinnedThreads.push(pinnedThreadInfo);
         }
       }
       this.indexPinnedThreads(pinnedThreads);
 
       let threads = [];
-      for (let thread of this.dom.threads.children) {
+      for (let thread of this.forumDom.threads.children) {
         if (thread.querySelector('a')) {
-          const threadInfo = this.dom.getThreadInfo(thread);
+          const threadInfo = this.forumDom.getThreadInfo(thread);
           threads.push(threadInfo);
         }
       }

@@ -1,4 +1,4 @@
-export default class Dom {
+export default class ForumDom {
   constructor(document, forumId) {
     this.forumId = forumId;
     this.body = document.body;
