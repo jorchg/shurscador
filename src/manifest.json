@@ -1,6 +1,7 @@
 {
   "name": "Shurscador",
   "description": "Un buscador moderno para Forocoches",
+  "version": "1.0.1",
   "author": "jorchg",
   "background": {
     "scripts": ["background.bundle.js"]
