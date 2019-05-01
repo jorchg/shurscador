@@ -148,8 +148,10 @@ import ThreadDom from './helpers/thread-dom';
           document.querySelector('.ais-Hits').remove();
           document.querySelector('.ais-Pagination').remove();
         }
+        document.querySelector('.search-wrapper').style.position = 'relative';
         return;    
       } else {
+        document.querySelector('.search-wrapper').style.position = 'absolute';
         helper.search();
       }
     }
@@ -161,10 +163,10 @@ import ThreadDom from './helpers/thread-dom';
   
     injectHTML(html = null) {
       const body = document.body;
-      const wrapper = document.createElement('div');
-      wrapper.classList.add('page-wrapper');
-      wrapper.innerHTML = body;
-      document.body.innerHTML = `<div class="page-wrapper">${body.innerHTML}</div>`;
+      // const wrapper = document.createElement('div');
+      // wrapper.classList.add('page-wrapper');
+      // wrapper.innerHTML = body;
+      // document.body.innerHTML = `<div class="page-wrapper">${body.innerHTML}</div>`;
       const firstChild = body.childNodes[0];
       const searchRoot = document.createElement('div');
       searchRoot.innerHTML = html;
