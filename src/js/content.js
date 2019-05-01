@@ -46,6 +46,12 @@ import ThreadDom from './helpers/thread-dom';
       let postsInfo = [];
       for (let post of posts) {
         const info = this.threadDom.getPostInfo(post);
+        if (
+          info &&
+          (info.threadTitle.includes('+18') ||
+          info.threadTitle.toLowerCase().includes('+hd') ||
+          info.threadTitle.toLowerCase().includes('+prv'))
+        ) return;
         if (info && info.postContent.length > 0) postsInfo.push(info);
       }
 
