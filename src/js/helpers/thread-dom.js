@@ -47,6 +47,7 @@ export default class ThreadDom {
     const postBody = table.querySelector(`#post_message_${postId}`);
     const postCount = table.querySelector(`#postcount${postId}`);
     const userBody = table.querySelector(`#postmenu_${postId}`);
+    const threadTitle = document.querySelector('.cmega').innerText;
 
     const postContent = postBody;
     for (let child of postContent.children) {
@@ -58,11 +59,12 @@ export default class ThreadDom {
 
     return {
       id: postId,
-      anchor: postAnchor,
       postContent: postContent.innerText,
       postBy,
       postById,
       postCount: postCount.innerText,
+      threadId: this.threadId,
+      threadTitle,
     }
   }
 }

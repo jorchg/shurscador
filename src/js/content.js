@@ -35,7 +35,8 @@ import ThreadDom from './helpers/thread-dom';
     }
 
     threadCrawl() {
-      const threadId = this.currentURL.split('showthread.php')[1].split('=')[1];
+      let threadId = this.currentURL.split('showthread.php')[1].split('=')[1];
+      if (threadId.includes('&')) threadId = threadId.split('&')[0];
       this.threadDom = new ThreadDom(document, threadId);
       this.startThreadCrawling();
     }
@@ -48,26 +49,27 @@ import ThreadDom from './helpers/thread-dom';
         if (info && info.postContent.length > 0) postsInfo.push(info);
       }
 
-      // Got posts. Now index them
-      console.log(postsInfo)
+      this.indexPosts(postsInfo);
     }
     
     forumCrawl() {
-      const forumId = this.currentURL.split('forumdisplay.php')[1].split('=')[1];
-      if (parseInt(forumId, 10) !== 2) return;
+      let forumId = this.currentURL.split('forumdisplay.php')[1].split('=')[1];
+      if (forumId.includes('&')) forumId = forumId.split('&')[0];
       this.forumDom = new ForumDom(document, forumId);
-      this.startForumCrawling();
+      if (this.forumDom.isForumToCrawl) this.startForumCrawling();
     }
 
     startForumCrawling() {
-      let pinnedThreads = [];
-      for (let pinnedThread of this.forumDom.pinnedThreads.children) {
-        if (pinnedThread.querySelector('a')) {
-          const pinnedThreadInfo = this.forumDom.getPinnedThreadInfo(pinnedThread);
-          pinnedThreads.push(pinnedThreadInfo);
+      if (!this.currentURL.includes('&page=')) {
+        let pinnedThreads = [];
+        for (let pinnedThread of this.forumDom.pinnedThreads.children) {
+          if (pinnedThread.querySelector('a')) {
+            const pinnedThreadInfo = this.forumDom.getPinnedThreadInfo(pinnedThread);
+            pinnedThreads.push(pinnedThreadInfo);
+          }
         }
+        this.indexPinnedThreads(pinnedThreads);
       }
-      this.indexPinnedThreads(pinnedThreads);
 
       let threads = [];
       for (let thread of this.forumDom.threads.children) {
@@ -78,6 +80,24 @@ import ThreadDom from './helpers/thread-dom';
       }
       this.indexThreads(threads);
       return;
+    }
+
+    async indexPosts(posts) {
+      const algoliaObjects = posts.map((post) => {
+        return {
+          ...post,
+          type: 'post',
+          lastSeen: new Date(),
+          type: 'post',
+        }
+      });
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      const indexResponse = await fetch(`${config.api.baseUrl}/index/post`, {
+        method: 'post',
+        body: JSON.stringify(algoliaObjects),
+        headers,
+      });
     }
 
     async indexPinnedThreads(pinnedThreads) {
@@ -172,8 +192,30 @@ import ThreadDom from './helpers/thread-dom';
                   ✉️
                   <a href="https://www.forocoches.com/foro/forumdisplay.php?f={{forumId}}" target="_blank">{{forumName}}</a>
                   >
-                  <a href="{{link}}" target="_blank">{{#helpers.highlight}}{ "attribute": "title" }{{/helpers.highlight}} </a>
-                  | <a href="https://www.forocoches.com/foro/member.php?u={{createdById}}" target="_blank">@{{#helpers.highlight}}{ "attribute": "createdBy" }{{/helpers.highlight}}</a>
+                  {{#title}}
+                    <a href="https://www.forocoches.com/foro/showthread.php?t={{objectID}}" target="_blank">
+                      {{#helpers.highlight}}{ "attribute": "title" }{{/helpers.highlight}}
+                    </a>
+                  {{/title}}
+                  {{#threadTitle}}
+                    <a href="https://www.forocoches.com/foro/showthread.php?t={{threadId}}" target="_blank">
+                      {{#helpers.highlight}}{ "attribute": "threadTitle" }{{/helpers.highlight}}
+                    </a>
+                  {{/threadTitle}}
+                  >
+                  {{#postContent}}
+                    <a href="https://www.forocoches.com/foro/showthread.php?t={{threadId}}#post{{objectID}}" target="_blank">
+                      {{#helpers.snippet}}{ "attribute": "postContent" }{{/helpers.snippet}}
+                    </a>
+                  {{/postContent}}
+                  <a href="https://www.forocoches.com/foro/member.php?u={{createdById}}" target="_blank">
+                    {{#createdBy}}
+                      @{{#helpers.highlight}}{ "attribute": "createdBy" }{{/helpers.highlight}}
+                    {{/createdBy}}
+                    {{^createdBy}}
+                      @{{#helpers.highlight}}{ "attribute": "postBy" }{{/helpers.highlight}}
+                    {{/createdBy}}
+                  </a>
                 </div>
               `
           },

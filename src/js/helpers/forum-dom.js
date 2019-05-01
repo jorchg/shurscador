@@ -2,6 +2,7 @@ export default class ForumDom {
   constructor(document, forumId) {
     this.forumId = forumId;
     this.body = document.body;
+    this.isForumToCrawl = document.body.querySelector('#threadslist') ? true : false;
   }
 
   get threadListTable() {
@@ -51,7 +52,6 @@ export default class ForumDom {
       id: threadId,
       forumId: this.forumId,
       title,
-      link: _anchor.href,
       createdBy,
       createdById,
     }
@@ -91,7 +91,6 @@ export default class ForumDom {
       id: threadId,
       forumId: this.forumId,
       title,
-      link: _anchor.href,
       createdBy,
       createdById,
     }
