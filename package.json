@@ -1,6 +1,6 @@
 {
   "name": "Shurscador",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Un buscador moderno para Forocoches",
   "engines": { "node": "8" },
   "scripts": {
