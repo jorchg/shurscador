@@ -1,3 +1,9 @@
+# Shurscador
+
+Shurscador es o era una extensión de Chrome que agrega un buscador moderno al sitio forocoches.com
+Tras anunciar en el foro la creación de esta extensión mi cuenta fue baneada en unos 10 minutos, por lo que al final sin un mínimo de difusión es imposible que esta extensión funcione:
+- Shurscador es una extensión **colaborativa**, es decir, para no generar carga adicional en el site, todo el que tuviera instalada la extensión ayudaba a indexar los hilos y posts mediante su normal navegación en el sitio.
+
 # Chrome Extension Webpack Boilerplate
 
 A basic foundation boilerplate for rich Chrome Extensions using [Webpack](https://webpack.github.io/) to help you write modular and modern Javascript code, load CSS easily and [automatic reload the browser on code changes](https://webpack.github.io/docs/webpack-dev-server.html#automatic-refresh).
